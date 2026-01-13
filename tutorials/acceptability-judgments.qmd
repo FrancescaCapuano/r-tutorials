@@ -1,0 +1,23 @@
+---
+title: "Linear Regression in R: An Applied Introduction"
+author: "Your Name"
+date: today
+bibliography: ../references.bib
+---
+
+## Problem Statement
+
+We want to understand the relationship between a response variable `y`
+and a predictor `x` using a simple, interpretable model.
+
+## Data
+
+We use a simulated dataset to focus on methodology rather than data collection.
+
+```{r}
+set.seed(123)
+df <- tibble(
+  x = rnorm(100),
+  y = 2 + 3 * x + rnorm(100)
+)
+```
