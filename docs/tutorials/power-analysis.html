@@ -251,12 +251,12 @@ div.csl-indent {
 <pre><code># A tibble: 6 × 5
   subject  item word_order sentence                     rating
     &lt;int&gt; &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;                         &lt;int&gt;
-1       1     1 SVO        The cat chased the mouse.         3
+1       1     1 SVO        The cat chased the mouse.         5
 2       1     1 SOV        The cat the mouse chased.         6
-3       1     2 SVO        She reads books every night.      2
-4       1     2 SOV        She every night books reads.      7
-5       1     3 SVO        They are visiting the park.       2
-6       1     3 SOV        They the park are visiting.       5</code></pre>
+3       1     2 SVO        She reads books every night.      5
+4       1     2 SOV        She every night books reads.      6
+5       1     3 SVO        They are visiting the park.       6
+6       1     3 SOV        They the park are visiting.       7</code></pre>
 </div>
 </div>
 </section>
@@ -290,31 +290,29 @@ lmerModLmerTest]
 Formula: rating ~ word_order + (1 | subject) + (1 | item)
    Data: df
 
-REML criterion at convergence: 248.2
+REML criterion at convergence: 238.7
 
 Scaled residuals: 
-     Min       1Q   Median       3Q      Max 
--1.66752 -0.72202  0.05157  0.65325  1.59875 
+    Min      1Q  Median      3Q     Max 
+-1.9553 -0.7937  0.1367  0.6810  1.8113 
 
 Random effects:
  Groups   Name        Variance Std.Dev.
- subject  (Intercept) 0.00     0.000   
- item     (Intercept) 0.00     0.000   
- Residual             3.76     1.939   
+ subject  (Intercept) 0.39041  0.6248  
+ item     (Intercept) 0.06638  0.2577  
+ Residual             2.87234  1.6948  
 Number of obs: 60, groups:  subject, 10; item, 3
 
 Fixed effects:
               Estimate Std. Error      df t value Pr(&gt;|t|)    
-(Intercept)     4.2333     0.3540 58.0000  11.958   &lt;2e-16 ***
-word_orderSVO  -0.3333     0.5007 58.0000  -0.666    0.508    
+(Intercept)     4.5667     0.3961  7.4853  11.528 4.95e-06 ***
+word_orderSVO  -0.5333     0.4376 47.0000  -1.219    0.229    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
             (Intr)
-word_rdrSVO -0.707
-optimizer (nloptwrap) convergence code: 0 (OK)
-boundary (singular) fit: see help('isSingular')</code></pre>
+word_rdrSVO -0.552</code></pre>
 </div>
 </div>
 <p>Plot of the means predicted by the model.</p>
@@ -357,25 +355,25 @@ formula: rating ~ word_order + (1 | subject) + (1 | item)
 data:    df
 
  link  threshold nobs logLik AIC    niter    max.grad cond.H 
- logit flexible  45   -69.64 153.29 292(155) 7.88e-05 4.1e+01
+ logit flexible  43   -66.04 146.08 270(246) 1.69e-05 4.0e+01
 
 Random effects:
- Groups  Name        Variance Std.Dev.
- subject (Intercept) 0        0       
- item    (Intercept) 0        0       
+ Groups  Name        Variance  Std.Dev.
+ subject (Intercept) 0.000e+00 0.00e+00
+ item    (Intercept) 9.006e-17 9.49e-09
 Number of groups:  subject 10,  item 3 
 
 Coefficients:
               Estimate Std. Error z value Pr(&gt;|z|)
-word_orderSVO   0.1258     0.5322   0.236    0.813
+word_orderSVO -0.05662    0.55176  -0.103    0.918
 
 Threshold coefficients:
     Estimate Std. Error z value
-1|2  -1.6274     0.4919  -3.309
-2|3  -0.6293     0.4152  -1.516
-3|4   0.3793     0.4103   0.924
-4|5   0.8619     0.4293   2.008
-(15 observations deleted due to missingness)</code></pre>
+1|2 -2.06132    0.57578  -3.580
+2|3 -0.98222    0.46937  -2.093
+3|4 -0.07888    0.43891  -0.180
+4|5  0.59219    0.44643   1.327
+(17 observations deleted due to missingness)</code></pre>
 </div>
 </div>
 </section>
