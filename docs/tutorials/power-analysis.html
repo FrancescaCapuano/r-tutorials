@@ -9,7 +9,7 @@
 <meta name="author" content="Francesca Capuano">
 <meta name="dcterms.date" content="2026-01-13">
 
-<title>Acceptability Ratings – Francesca Capuano — R Tutorials</title>
+<title>Power Analysis – Francesca Capuano — R Tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -57,27 +57,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -175,13 +155,7 @@ div.csl-indent {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data" id="toc-data" class="nav-link active" data-scroll-target="#data">Data</a></li>
-  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a>
-  <ul class="collapse">
-  <li><a href="#linear-mixed-model-lmm" id="toc-linear-mixed-model-lmm" class="nav-link" data-scroll-target="#linear-mixed-model-lmm">Linear Mixed Model (LMM)</a></li>
-  <li><a href="#cumulative-link-mixed-model-clmm" id="toc-cumulative-link-mixed-model-clmm" class="nav-link" data-scroll-target="#cumulative-link-mixed-model-clmm">Cumulative Link Mixed Model (CLMM)</a></li>
-  </ul></li>
-  <li><a href="#power-analysis" id="toc-power-analysis" class="nav-link" data-scroll-target="#power-analysis">Power Analysis</a></li>
+  <li><a href="#power-analysis" id="toc-power-analysis" class="nav-link active" data-scroll-target="#power-analysis">Power Analysis</a></li>
   </ul>
 </nav>
     </div>
@@ -190,7 +164,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Acceptability Ratings</h1>
+<h1 class="title">Power Analysis</h1>
 </div>
 
 
@@ -219,195 +193,19 @@ div.csl-indent {
 </header>
 
 
-<p>See <span class="citation" data-cites="bross2019acceptability">Bross (<a href="#ref-bross2019acceptability" role="doc-biblioref">2019</a>)</span> for a more thorough tutorial on how to analyse acceptability ratings. Below is an example of how a final analysis script might look like.</p>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
-<p>We use a simulated dataset with subjects and items as random factors. We manipulate word order (SVO vs.&nbsp;SOV). Word order is manipulated within subject (every subject sees all levels of word order, i.e.&nbsp;both SOV and SVO) and within item (every item has both and SOV and an SVO version).</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulated acceptability judgment dataset with word order manipulation</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">subject =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">each =</span> <span class="dv">6</span>),</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">item =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">each =</span> <span class="dv">2</span>, <span class="at">times=</span><span class="dv">10</span>),</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">word_order =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"SVO"</span>, <span class="st">"SOV"</span>), <span class="at">times=</span><span class="dv">3</span><span class="sc">*</span><span class="dv">10</span>),</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sentence =</span> <span class="fu">rep</span>(<span class="fu">c</span>(</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"The cat chased the mouse."</span>,     <span class="co"># SVO</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"The cat the mouse chased."</span>,     <span class="co"># SOV</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"She reads books every night."</span>,  <span class="co"># SVO</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"She every night books reads."</span>,  <span class="co"># SOV</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"They are visiting the park."</span>,   <span class="co"># SVO</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"They the park are visiting."</span>    <span class="co"># SOV</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">times=</span><span class="dv">10</span>),</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">rating =</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>, <span class="dv">60</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick check</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 5
-  subject  item word_order sentence                     rating
-    &lt;int&gt; &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;                         &lt;int&gt;
-1       1     1 SVO        The cat chased the mouse.         4
-2       1     1 SOV        The cat the mouse chased.         5
-3       1     2 SVO        She reads books every night.      5
-4       1     2 SOV        She every night books reads.      1
-5       1     3 SVO        They are visiting the park.       7
-6       1     3 SOV        They the park are visiting.       4</code></pre>
-</div>
-</div>
-</section>
-<section id="analysis" class="level2">
-<h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
-<p>Although technically it is ordinal data, acceptability ratings are often treated as interval data, especially if the scale is large enough (&gt;= 5). Because designs in psycholinguistics include the concurrent manipulation of subjects and items as random factors, it is common practice to analyse the data with linear mixed effect models.</p>
-<p>For an introduction to mixed models, see <span class="citation" data-cites="winter2019statistics">Winter (<a href="#ref-winter2019statistics" role="doc-biblioref">2019</a>)</span>.</p>
-<p>For a debate on the specification of the random effects structure of the model, see <span class="citation" data-cites="barr2013random">Barr et al. (<a href="#ref-barr2013random" role="doc-biblioref">2013</a>)</span> and <span class="citation" data-cites="matuschek2017balancing">Matuschek et al. (<a href="#ref-matuschek2017balancing" role="doc-biblioref">2017</a>)</span>.</p>
-<section id="linear-mixed-model-lmm" class="level3">
-<h3 class="anchored" data-anchor-id="linear-mixed-model-lmm">Linear Mixed Model (LMM)</h3>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmerTest)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># define factors</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>word_order <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>word_order)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>subject <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>subject)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>item <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>item)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear Mixed Model (LMM)</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lmer</span>(rating <span class="sc">~</span> word_order </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>          <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subject) <span class="co"># adds a random intercept for each participant</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>          <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>item), <span class="co"># adds a random intercept for each item</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> df)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
-lmerModLmerTest]
-Formula: rating ~ word_order + (1 | subject) + (1 | item)
-   Data: df
-
-REML criterion at convergence: 251.8
-
-Scaled residuals: 
-     Min       1Q   Median       3Q      Max 
--1.47494 -0.94565 -0.00461  0.66635  1.58820 
-
-Random effects:
- Groups   Name        Variance Std.Dev.
- subject  (Intercept) 0.09534  0.3088  
- item     (Intercept) 0.00000  0.0000  
- Residual             3.91871  1.9796  
-Number of obs: 60, groups:  subject, 10; item, 3
-
-Fixed effects:
-              Estimate Std. Error      df t value Pr(&gt;|t|)    
-(Intercept)     3.8667     0.3744 27.6879  10.328 5.33e-11 ***
-word_orderSVO   0.1000     0.5111 49.0000   0.196    0.846    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Correlation of Fixed Effects:
-            (Intr)
-word_rdrSVO -0.683
-optimizer (nloptwrap) convergence code: 0 (OK)
-boundary (singular) fit: see help('isSingular')</code></pre>
-</div>
-</div>
-<p>Plot of the means predicted by the model.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot predicted mean acceptability rating</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m, <span class="sc">~</span> word_order)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>response <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>rating, <span class="at">ordered =</span> <span class="cn">TRUE</span>, <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(emm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="power-analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="cumulative-link-mixed-model-clmm" class="level3">
-<h3 class="anchored" data-anchor-id="cumulative-link-mixed-model-clmm">Cumulative Link Mixed Model (CLMM)</h3>
-<p>A more conservative analysis can be reported in addition to the that treats the data as ordinal.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ordinal)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Cumulative Link Mixed Model (CLMM) --&gt; more conservative</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>rating <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>rating, <span class="at">ordered =</span> <span class="cn">TRUE</span>, <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">clmm</span>(rating <span class="sc">~</span> word_order <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>subject) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>item), <span class="at">data =</span> df)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Cumulative Link Mixed Model fitted with the Laplace approximation
-
-formula: rating ~ word_order + (1 | subject) + (1 | item)
-data:    df
-
- link  threshold nobs logLik AIC    niter    max.grad cond.H 
- logit flexible  46   -71.96 157.92 291(592) 3.31e-06 4.5e+01
-
-Random effects:
- Groups  Name        Variance Std.Dev.
- subject (Intercept) 0.0000   0.000   
- item    (Intercept) 0.1892   0.435   
-Number of groups:  subject 10,  item 3 
-
-Coefficients:
-              Estimate Std. Error z value Pr(&gt;|z|)
-word_orderSVO   0.0174     0.5393   0.032    0.974
-
-Threshold coefficients:
-    Estimate Std. Error z value
-1|2  -1.7878     0.5745  -3.112
-2|3  -0.3734     0.4891  -0.764
-3|4   0.4562     0.4856   0.939
-4|5   1.0816     0.5040   2.146
-(14 observations deleted due to missingness)</code></pre>
-</div>
-</div>
-</section>
-</section>
 <section id="power-analysis" class="level1">
 <h1>Power Analysis</h1>
-<p>A more conservative analysis can be reported in addition to the that treats the data as ordinal.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(simr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(simr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 
 
-
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
-<div id="ref-barr2013random" class="csl-entry" role="listitem">
-Barr, D. J., Levy, R., Scheepers, C., &amp; Tily, H. J. (2013). Random effects structure for confirmatory hypothesis testing: Keep it maximal. <em>Journal of Memory and Language</em>, <em>68</em>(3), 255–278.
-</div>
-<div id="ref-bross2019acceptability" class="csl-entry" role="listitem">
-Bross, F. (2019). <em>Acceptability ratings in linguistics: A practical guide to grammaticality judgments, data collection, and statistical analysis</em>. Version 1.0. Mimeo.
-</div>
-<div id="ref-matuschek2017balancing" class="csl-entry" role="listitem">
-Matuschek, H., Kliegl, R., Vasishth, S., Baayen, H., &amp; Bates, D. (2017). Balancing type i error and power in linear mixed models. <em>Journal of Memory and Language</em>, <em>94</em>, 305–315.
-</div>
-<div id="ref-winter2019statistics" class="csl-entry" role="listitem">
-Winter, B. (2019). <em>Statistics for linguists: An introduction using r</em>. Routledge.
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
