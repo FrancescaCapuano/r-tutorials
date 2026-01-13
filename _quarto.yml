@@ -1,7 +1,7 @@
 project:
   type: website
   output-dir: docs
-  
+
 website:
   title: "Francesca Capuano — R Tutorials"
   navbar:
@@ -19,3 +19,4 @@ format:
     css: styles.css
     toc: true
     code-fold: true
+
