@@ -1,0 +1,55 @@
+./
+├── about.qmd
+├── docs
+│   ├── index.html
+│   ├── search.json
+│   ├── site_libs
+│   │   ├── bootstrap
+│   │   │   ├── bootstrap-26276a217d4c691d71d8a47b46ac4c7d.min.css
+│   │   │   ├── bootstrap-icons.css
+│   │   │   ├── bootstrap-icons.woff
+│   │   │   └── bootstrap.min.js
+│   │   ├── clipboard
+│   │   │   └── clipboard.min.js
+│   │   ├── quarto-html
+│   │   │   ├── anchor.min.js
+│   │   │   ├── axe
+│   │   │   │   └── axe-check.js
+│   │   │   ├── popper.min.js
+│   │   │   ├── quarto.js
+│   │   │   ├── quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css
+│   │   │   ├── tabsets
+│   │   │   │   └── tabsets.js
+│   │   │   ├── tippy.css
+│   │   │   └── tippy.umd.min.js
+│   │   ├── quarto-nav
+│   │   │   ├── headroom.min.js
+│   │   │   └── quarto-nav.js
+│   │   └── quarto-search
+│   │       ├── autocomplete.umd.js
+│   │       ├── fuse.min.js
+│   │       └── quarto-search.js
+│   ├── styles.css
+│   └── tutorials
+│       ├── acceptability-ratings_files
+│       │   └── figure-html
+│       │       ├── unnamed-chunk-2-1.png
+│       │       └── unnamed-chunk-4-1.png
+│       ├── acceptability-ratings.html
+│       ├── index.html
+│       ├── power-analysis_files
+│       │   └── figure-html
+│       │       └── unnamed-chunk-3-1.png
+│       └── power-analysis.html
+├── index.qmd
+├── output.txt
+├── _quarto.yml
+├── references.bib
+├── styles.css
+└── tutorials
+    ├── acceptability-ratings.qmd
+    ├── apa.csl
+    ├── index.qmd
+    └── power-analysis.qmd
+
+15 directories, 37 files

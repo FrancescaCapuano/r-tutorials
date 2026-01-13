@@ -8,10 +8,10 @@ website:
     left:
       - text: Home
         href: index.qmd
-      - text: Tutorials
-        href: tutorials/index.qmd
-      - text: About
-        href: about.qmd
+      - text: Acceptability Ratings
+        href: tutorials/acceptability-ratings.qmd
+      - text: Power Analysis
+        href: tutorials/power-analysis.qmd
 
 format:
   html:
