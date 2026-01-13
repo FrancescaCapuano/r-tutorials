@@ -1,0 +1,90 @@
+---
+title: "Acceptability Ratings"
+author: "Francesca Capuano"
+date: today
+bibliography: ../references.bib
+csl: apa.csl
+---
+
+See @bross2019acceptability for a more thorough tutorial on how to analyse acceptability ratings. Below is an example of how a final analysis script might look like.
+
+## Data
+
+We use a simulated dataset with subjects and items as random factors. We manipulate word order (SVO vs. SOV). Word order is manipulated within subject (every subject sees all levels of word order, i.e. both SOV and SVO) and within item (every item has both and SOV and an SVO version).
+
+```{r}
+library(tibble)
+
+# Simulated acceptability judgment dataset with word order manipulation
+df <- tibble(
+  subject = rep(1:10, each = 6),
+  item = rep(1:3, each = 2, times=10),
+  word_order = rep(c("SVO", "SOV"), times=3*10),
+  sentence = rep(c(
+    "The cat chased the mouse.",     # SVO
+    "The cat the mouse chased.",     # SOV
+    "She reads books every night.",  # SVO
+    "She every night books reads.",  # SOV
+    "They are visiting the park.",   # SVO
+    "They the park are visiting."    # SOV
+  ), times=10),
+  rating = sample(1:7, 60, replace = TRUE)
+)
+
+# Quick check
+head(df)
+```
+
+## Analysis
+
+Although technically it is ordinal data, acceptability ratings are often treated as interval data, especially if the scale is large enough (>= 5). Because designs in psycholinguistics include the concurrent manipulation of subjects and items as random factors, it is common practice to analyse the data with linear mixed effect models. 
+
+For an introduction to mixed models, see @winter2019statistics. 
+
+For a debate on the specification of the random effects structure of the model, see @barr2013random and @matuschek2017balancing.
+
+### Linear Mixed Model (LMM)
+```{r, message=FALSE}
+library(lmerTest)
+
+# define factors
+df$word_order <- factor(df$word_order)
+df$subject <- factor(df$subject)
+df$item <- factor(df$item)
+
+# Linear Mixed Model (LMM)
+m <- lmer(rating ~ word_order 
+          + (1|subject) # adds a random intercept for each participant
+          + (1|item), # adds a random intercept for each item
+          data = df)
+summary(m)
+```
+
+Plot of the means predicted by the model.
+
+```{r, message=FALSE}
+library(emmeans)
+
+# plot predicted mean acceptability rating
+emm <- emmeans(m, ~ word_order)
+df$response <- factor(df$rating, ordered = TRUE, levels = 1:5)
+plot(emm)
+```
+
+### Cumulative Link Mixed Model (CLMM)
+A more conservative analysis can be reported in addition to the that treats the data as ordinal.
+```{r, message=FALSE}
+library(ordinal)
+
+# Cumulative Link Mixed Model (CLMM) --> more conservative
+df$rating <- factor(df$rating, ordered = TRUE, levels = 1:5)
+m2 <- clmm(rating ~ word_order + (1|subject) + (1|item), data = df)
+summary(m2)
+```
+
+# Power Analysis
+A more conservative analysis can be reported in addition to the that treats the data as ordinal.
+```{r, message=FALSE}
+library(simr)
+
+```
