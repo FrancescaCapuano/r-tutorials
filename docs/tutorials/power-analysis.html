@@ -152,12 +152,12 @@ div.csl-indent {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html"> 
-<span class="menu-text">Tutorials</span></a>
+    <a class="nav-link" href="../tutorials/acceptability-ratings.html"> 
+<span class="menu-text">Acceptability Ratings</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
-<span class="menu-text">About</span></a>
+    <a class="nav-link active" href="../tutorials/power-analysis.html" aria-current="page"> 
+<span class="menu-text">Power Analysis</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -251,12 +251,12 @@ div.csl-indent {
 <pre><code># A tibble: 6 × 5
   subject  item word_order sentence                     rating
     &lt;int&gt; &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;                         &lt;int&gt;
-1       1     1 SVO        The cat chased the mouse.         5
-2       1     1 SOV        The cat the mouse chased.         6
+1       1     1 SVO        The cat chased the mouse.         4
+2       1     1 SOV        The cat the mouse chased.         5
 3       1     2 SVO        She reads books every night.      5
-4       1     2 SOV        She every night books reads.      6
-5       1     3 SVO        They are visiting the park.       6
-6       1     3 SOV        They the park are visiting.       7</code></pre>
+4       1     2 SOV        She every night books reads.      1
+5       1     3 SVO        They are visiting the park.       7
+6       1     3 SOV        They the park are visiting.       4</code></pre>
 </div>
 </div>
 </section>
@@ -290,29 +290,31 @@ lmerModLmerTest]
 Formula: rating ~ word_order + (1 | subject) + (1 | item)
    Data: df
 
-REML criterion at convergence: 238.7
+REML criterion at convergence: 251.8
 
 Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--1.9553 -0.7937  0.1367  0.6810  1.8113 
+     Min       1Q   Median       3Q      Max 
+-1.47494 -0.94565 -0.00461  0.66635  1.58820 
 
 Random effects:
  Groups   Name        Variance Std.Dev.
- subject  (Intercept) 0.39041  0.6248  
- item     (Intercept) 0.06638  0.2577  
- Residual             2.87234  1.6948  
+ subject  (Intercept) 0.09534  0.3088  
+ item     (Intercept) 0.00000  0.0000  
+ Residual             3.91871  1.9796  
 Number of obs: 60, groups:  subject, 10; item, 3
 
 Fixed effects:
               Estimate Std. Error      df t value Pr(&gt;|t|)    
-(Intercept)     4.5667     0.3961  7.4853  11.528 4.95e-06 ***
-word_orderSVO  -0.5333     0.4376 47.0000  -1.219    0.229    
+(Intercept)     3.8667     0.3744 27.6879  10.328 5.33e-11 ***
+word_orderSVO   0.1000     0.5111 49.0000   0.196    0.846    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
             (Intr)
-word_rdrSVO -0.552</code></pre>
+word_rdrSVO -0.683
+optimizer (nloptwrap) convergence code: 0 (OK)
+boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
 </div>
 <p>Plot of the means predicted by the model.</p>
@@ -355,25 +357,25 @@ formula: rating ~ word_order + (1 | subject) + (1 | item)
 data:    df
 
  link  threshold nobs logLik AIC    niter    max.grad cond.H 
- logit flexible  43   -66.04 146.08 270(246) 1.69e-05 4.0e+01
+ logit flexible  46   -71.96 157.92 291(592) 3.31e-06 4.5e+01
 
 Random effects:
- Groups  Name        Variance  Std.Dev.
- subject (Intercept) 0.000e+00 0.00e+00
- item    (Intercept) 9.006e-17 9.49e-09
+ Groups  Name        Variance Std.Dev.
+ subject (Intercept) 0.0000   0.000   
+ item    (Intercept) 0.1892   0.435   
 Number of groups:  subject 10,  item 3 
 
 Coefficients:
               Estimate Std. Error z value Pr(&gt;|z|)
-word_orderSVO -0.05662    0.55176  -0.103    0.918
+word_orderSVO   0.0174     0.5393   0.032    0.974
 
 Threshold coefficients:
     Estimate Std. Error z value
-1|2 -2.06132    0.57578  -3.580
-2|3 -0.98222    0.46937  -2.093
-3|4 -0.07888    0.43891  -0.180
-4|5  0.59219    0.44643   1.327
-(17 observations deleted due to missingness)</code></pre>
+1|2  -1.7878     0.5745  -3.112
+2|3  -0.3734     0.4891  -0.764
+3|4   0.4562     0.4856   0.939
+4|5   1.0816     0.5040   2.146
+(14 observations deleted due to missingness)</code></pre>
 </div>
 </div>
 </section>
