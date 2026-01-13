@@ -6,6 +6,8 @@ website:
   title: "Francesca Capuano — R Tutorials"
   navbar:
     left:
+      - text: Home
+        href: index.qmd
       - text: Acceptability Ratings
         href: tutorials/acceptability-ratings.qmd
       - text: Power Analysis

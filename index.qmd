@@ -1,7 +1,11 @@
 ---
-title: "r-tutorials"
+title: "R Tutorials"
 ---
 
-This is a Quarto website.
+# Welcome to the R Tutorials
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+This page contains tutorials on acceptability ratings, mixed models, and other related analyses in R.  
+
+Use the navigation bar above to explore the different topics and resources.  
+
+All tutorials are meant to be practical examples, and you can also find links to datasets, example scripts, and helpful references.

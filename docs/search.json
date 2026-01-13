@@ -30,9 +30,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "r-tutorials",
+    "title": "R Tutorials",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+    "text": "Welcome to the R Tutorials\nThis page contains tutorials on acceptability ratings, mixed models, and other related analyses in R.\nUse the navigation bar above to explore the different topics and resources.\nAll tutorials are meant to be practical examples, and you can also find links to datasets, example scripts, and helpful references."
   },
   {
     "objectID": "tutorials/index.html",
