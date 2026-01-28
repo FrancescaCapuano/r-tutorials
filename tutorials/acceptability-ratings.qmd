@@ -111,6 +111,10 @@ For an introduction to mixed models, see @winter2019statistics.
 For a debate on the specification of the random effects structure of the model, see @barr2013random and @matuschek2017balancing.
 
 ### Linear Mixed Model (LMM)
+
+For the assumptions of linear mixed models, see:
+https://vasishth.github.io/Freq_CogSci/checking-model-assumptions.html
+but also @schielzeth2020robustness.
 ```{r, message=FALSE}
 library(lmerTest)
 
@@ -133,11 +137,17 @@ The fixed effect of word_order tests whether SVO and SOV sentences differ in mea
 
 "The model revealed no significant effect of word order. Specifically, SVO sentences were slightly lower than SOV sentences, but the difference was not statistically significant (*β* = -0.23, *SE* = 0.34, *t*(56) = -0.68, *p* = .50)."
 
+##### Note
+If word_order has more than two levels (e.g. SOV, SVO, VSO) and you need pairwise comparisons:
+```{r, message=FALSE}
+library(emmeans)
+# you need to choose the right adjustment family depending on your data
+pairs(emmeans(m, ~ word_order), adjust = "tukey")
+```
+
 #### Plot of the means predicted by the model.
 
 ```{r, message=FALSE}
-library(emmeans)
-
 # plot predicted mean acceptability rating
 emm <- emmeans(m, ~ word_order)
 df$rating <- factor(df$rating, ordered = TRUE, levels = 1:5)
